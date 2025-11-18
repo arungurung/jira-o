@@ -6,6 +6,7 @@ import Header from '@/components/header';
 import { ClerkProvider } from '@clerk/nextjs';
 import { shadcn } from '@clerk/themes';
 import { Toaster } from 'sonner';
+import Providers from './providers';
 
 const interFont = Inter({ subsets: ['latin'] });
 
@@ -29,17 +30,19 @@ export default function RootLayout({
         <body
           className={`${interFont.className} antialiased dotted-background`}
         >
-          <ThemeProvider attribute="class">
-            <Header />
+          <Providers>
+            <ThemeProvider attribute="class">
+              <Header />
 
-            <main className="min-h-screen">{children}</main>
+              <main className="min-h-screen">{children}</main>
 
-            <Toaster richColors />
+              <Toaster richColors />
 
-            <footer className="w-full py-4 text-center text-sm text-gray-500">
-              <p>&copy; {new Date().getFullYear()} Jira-o - Arun Gurung</p>
-            </footer>
-          </ThemeProvider>
+              <footer className="w-full py-4 text-center text-sm text-gray-500">
+                <p>&copy; {new Date().getFullYear()} Jira-o - Arun Gurung</p>
+              </footer>
+            </ThemeProvider>
+          </Providers>
         </body>
       </html>
     </ClerkProvider>

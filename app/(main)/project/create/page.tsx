@@ -9,11 +9,11 @@ import { projectSchema } from '@/lib/validators';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
-import { useFetch } from '@/hooks/use-fetch';
 import { createProject } from '@/actions/projects';
 import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
 import { BarLoader } from 'react-spinners';
+import { useMutation } from '@tanstack/react-query';
 
 const CreateProjectPage = () => {
   const { isLoaded: isOrgLoaded, membership } = useOrganization();
@@ -37,21 +37,19 @@ const CreateProjectPage = () => {
 
   const {
     data: project,
-    loading,
+    isPending,
     error,
-    fn: createProjectFn,
-  } = useFetch(createProject);
-
-  const onSubmit = async (data: any) => {
-    createProjectFn(data);
-  };
+    mutate: createProjectFn,
+  } = useMutation({
+    mutationFn: createProject,
+  });
 
   useEffect(() => {
     if (project) {
       toast.success('Project created successfully!');
       router.push(`/project/${project.id}`);
     }
-  }, [loading]);
+  }, [isPending]);
 
   if (!isOrgLoaded || !isUserLoaded) {
     return null;
@@ -76,7 +74,7 @@ const CreateProjectPage = () => {
 
       <form
         className="flex flex-col space-y-4"
-        onSubmit={handleSubmit(onSubmit)}
+        onSubmit={handleSubmit(async (data) => createProjectFn(data))}
       >
         <div>
           <Input
@@ -116,17 +114,17 @@ const CreateProjectPage = () => {
           )}
         </div>
 
-        {loading && (
+        {isPending && (
           <BarLoader className="mb-4" width={'100%'} color="#36d7b7" />
         )}
 
         <Button
           type="submit"
-          disabled={loading}
+          disabled={isPending}
           size={'lg'}
           className="bg-blue-500 text-white"
         >
-          {loading ? 'Creating...' : 'Create Project'}
+          {isPending ? 'Creating...' : 'Create Project'}
         </Button>
         {error && <p className="text-red-500 text-sm mt-2">{error.message}</p>}
       </form>

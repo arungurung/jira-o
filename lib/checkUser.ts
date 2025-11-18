@@ -32,6 +32,6 @@ export const checkUser = async () => {
 
     return newUser;
   } catch (error) {
-    throw new Error('Error checking or creating user');
+    console.error(error);
   }
 };
