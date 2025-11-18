@@ -121,7 +121,7 @@ const SprintCreationForm = ({
                 </label>
                 <Controller
                   control={control}
-                  name="dateRange"
+                  name="startDate"
                   render={({ field }) => (
                     <Popover>
                       <PopoverTrigger asChild>
